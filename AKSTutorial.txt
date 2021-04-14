@@ -1,5 +1,5 @@
 --code git repository with yaml
-
+https://github.com/gauravrehan/azure-aks-helloworld
 
 --crate a new resource group and AKS cluster using the portal
 
