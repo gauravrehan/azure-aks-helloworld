@@ -1,0 +1,85 @@
+--code git repository with yaml
+
+
+--crate a new resource group and AKS cluster using the portal
+
+--create ACR Repository
+az acr create --resource-group gaurehaResourceGroup --name gaurehaACRRepository --sku Basic
+
+--login from local computer, use azure shell (install it using: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash)
+az login (this will open default browser to authenticate)
+
+--login to ACR
+az acr login --name gaurehaACRRepository
+
+--list docker image. it should list your image 
+docker images
+
+--Get the ACR login server for tagging the image so that when we push the image, it goes to the ACR
+az acr list --resource-group gaurehaResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
+-- got this from above: gaurehaacrrepository.azurecr.io
+
+--In spring boot app, have the image created using the gradle target
+
+--Tag command:
+docker tag gauravhelloworld:0.0.1-SNAPSHOT gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.1-SNAPSHOT
+
+--Push command:
+docker push gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.1-SNAPSHOT
+
+--Verify ACR push
+az acr repository list --name gaurehaACRRepository --output table
+
+--Verify ACR pushed image tags
+az acr repository show-tags --name gaurehaACRRepository --repository gauravhelloworld --output table
+
+--Connect to cluster
+az aks get-credentials --resource-group gaurehaResourceGroup --name gaurehaAKSCluster
+
+--List the kubectl nodes
+kubectl get nodes
+
+--Run the app
+kubectl apply -f app.yml
+
+kubectl get service gauravrehanhelloworld --watch
+
+--Grant AKS image pull rights
+az acr login --name gaurehaACRRepository
+az aks get-credentials -g gaurehaResourceGroup -n gaurehaAKSCluster
+az aks update -n gaurehaAKSCluster -g gaurehaResourceGroup --attach-acr gaurehaACRRepository
+
+kubectl describe pod gauravrehanhelloworld-65645c9557-ntkm9
+
+--Replace the deployment when you update the yml
+kubectl replace --force -f app.yml
+
+kubectl describe pod gauravrehanhelloworld-65645c9557-zh2q5
+
+--get logs of pod (stdout)
+kubectl logs gauravrehanhelloworld-65645c9557-6krbc
+
+--ssh into a pod
+kubectl exec --stdin --tty gauravrehanhelloworld-6d595f6c95-hvmnw -- /bin/bash
+
+--manually scale the pods
+kubectl scale --replicas=5 deployment/gauravrehanhelloworld
+
+--autoscale the pods based on the load i.e. average cpu load exceeds 50%
+kubectl autoscale deployment auravrehanhelloworld --cpu-percent=50 --min=3 --max=10
+
+--manually scale the nodes
+az aks scale --resource-group gaurehaResourceGroup --name gaurehaAKSCluster --node-count 3
+
+--Update the application without downtime
+kubectl set image deployment gauravrehanhelloworld auravrehanhelloworld=<acrLoginServer>/auravrehanhelloworld:v2
+
+
+
+
+
+
+
+
+
+
