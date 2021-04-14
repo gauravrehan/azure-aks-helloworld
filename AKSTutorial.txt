@@ -23,9 +23,11 @@ az acr list --resource-group gaurehaResourceGroup --query "[].{acrLoginServer:lo
 
 --Tag command:
 docker tag gauravhelloworld:0.0.1-SNAPSHOT gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.1-SNAPSHOT
+docker tag gauravhelloworld:0.0.2-SNAPSHOT gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
 
 --Push command:
 docker push gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.1-SNAPSHOT
+docker push gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
 
 --Verify ACR push
 az acr repository list --name gaurehaACRRepository --output table
@@ -72,7 +74,7 @@ kubectl autoscale deployment auravrehanhelloworld --cpu-percent=50 --min=3 --max
 az aks scale --resource-group gaurehaResourceGroup --name gaurehaAKSCluster --node-count 3
 
 --Update the application without downtime
-kubectl set image deployment gauravrehanhelloworld auravrehanhelloworld=<acrLoginServer>/auravrehanhelloworld:v2
+kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
 
 
 
