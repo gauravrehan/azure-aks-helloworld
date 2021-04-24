@@ -1,0 +1,14 @@
+$SUBSCRIPTION = "c40a4f9c-6d90-4c1c-b839-71bb2976256d"
+$RESOURCE_GROUP = "gaurehaResourceGroup"
+$AKS_CLUSTER_NAME = "gaurehaAKSCluster"
+$AKS_VNET_SUBNET = "default-4"
+
+az login
+
+az network route-table create --subscription $SUBSCRIPTION --name aks-route-table --resource-group infrastructure
+
+az network route-table route create --subscription $SUBSCRIPTION --route-table-name aks-route-table --resource-group infrastructure --name default-route --address-prefix 0.0.0.0/0 --next-hop-type VirtualNetworkGateway
+
+az network vnet subnet update --subscription $SUBSCRIPTION --resource-group infrastructure --vnet-name default --name $AKS_VNET_SUBNET --route-table aks-route-table
+
+az aks create --subscription $SUBSCRIPTION --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --outbound-type userDefinedRouting --network-plugin azure --generate-ssh-keys --vnet-subnet-id /subscriptions/$SUBSCRIPTION/resoureGroups/infrastructure/providers/Microsoft.Network/virtualNetworks/default/subnets/$AKS_VNET_SUBNET
