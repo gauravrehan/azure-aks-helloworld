@@ -1,7 +1,20 @@
+Exploratory Areas:
+Azure Kubernetes Cluster setup with auto-scaling
+Azure Relational DB service setup
+Azure Blob storage for Files
+Azure Network - VNET and LoadBalancers
+Azure Active Directory
+Authentication and Authorization for Apps running in Azure (OpenId Connect & OAuth2)
+App Health Monitoring in Azure
+
+
 --code git repository with yaml
 https://github.com/gauravrehan/azure-aks-helloworld
 
 --crate a new resource group and AKS cluster using the portal
+
+--login into az shell
+az login
 
 --create ACR Repository
 az acr create --resource-group gaurehaResourceGroup --name gaurehaACRRepository --sku Basic
@@ -43,12 +56,15 @@ az aks get-credentials --resource-group gaurehaResourceGroup --name gaurehaAKSCl
 --List the kubectl nodes
 kubectl get nodes
 
+--Grant ACR access to cluster resources:
+az aks update -n gaurehaAKSCluster -g gaurehaResourceGroup --attach-acr gaurehaACRRepository
+
 --Run the app
 kubectl apply -f app.yml
 
 kubectl get service gauravrehanhelloworld --watch
 
---Grant AKS image pull rights
+--Grant AKS image pull rights (just in case you face issues with image pull errors)
 az acr login --name gaurehaACRRepository
 az aks get-credentials -g gaurehaResourceGroup -n gaurehaAKSCluster
 az aks update -n gaurehaAKSCluster -g gaurehaResourceGroup --attach-acr gaurehaACRRepository
@@ -76,18 +92,11 @@ kubectl autoscale deployment auravrehanhelloworld --cpu-percent=50 --min=3 --max
 az aks scale --resource-group gaurehaResourceGroup --name gaurehaAKSCluster --node-count 3
 
 --Update the application without downtime
-kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
+docker tag gauravhelloworld:0.0.4-SNAPSHOT gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
+docker push gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
 kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
 
 
-
-Next Steps
-Azure Relational DB service setup, Azure SQL
-Azure Active Directory
-
- -- Saml Open ID, OAuth 2
-
-Open Shift - K
 
 
 
