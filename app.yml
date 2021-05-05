@@ -25,6 +25,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gauravrehanhelloworld
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-interal: "true"
 spec:
   type: LoadBalancer
   ports:

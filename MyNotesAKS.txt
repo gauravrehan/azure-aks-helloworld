@@ -82,6 +82,8 @@ kubectl logs gauravrehanhelloworld-65645c9557-6krbc
 --ssh into a pod
 kubectl exec --stdin --tty gauravrehanhelloworld-6d595f6c95-hvmnw -- /bin/bash
 
+kubectl exec --stdin --tty gauravrehanhelloworld-5bb6967b56-s2pkj -- /bin/bash
+
 --manually scale the pods
 kubectl scale --replicas=5 deployment/gauravrehanhelloworld
 
