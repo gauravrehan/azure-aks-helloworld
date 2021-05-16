@@ -62,7 +62,7 @@ az aks update -n gaurehaAKSCluster -g gaurehaResourceGroup --attach-acr gaurehaA
 --Run the app
 kubectl apply -f app.yml
 
-kubectl get service gauravrehanhelloworld --watch
+kubectl get  allservice gauravrehanhelloworld --watch
 
 --Grant AKS image pull rights (just in case you face issues with image pull errors)
 az acr login --name gaurehaACRRepository
@@ -78,6 +78,7 @@ kubectl describe pod gauravrehanhelloworld-65645c9557-zh2q5
 
 --get logs of pod (stdout)
 kubectl logs gauravrehanhelloworld-65645c9557-6krbc
+kubectl logs gauravrehanhelloworld-5bb6967b56-rq7b5
 
 --ssh into a pod
 kubectl exec --stdin --tty gauravrehanhelloworld-6d595f6c95-hvmnw -- /bin/bash
@@ -97,6 +98,10 @@ az aks scale --resource-group gaurehaResourceGroup --name gaurehaAKSCluster --no
 docker tag gauravhelloworld:0.0.4-SNAPSHOT gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
 docker push gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
 kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.4-SNAPSHOT
+
+
+kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
+kubectl set image deployment gauravrehanhelloworld gauravrehanhelloworld=gaurehaacrrepository.azurecr.io/gauravhelloworld:0.0.2-SNAPSHOT
 
 
 

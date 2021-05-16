@@ -26,7 +26,7 @@ kind: Service
 metadata:
   name: gauravrehanhelloworld
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-interal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   type: LoadBalancer
   ports:
